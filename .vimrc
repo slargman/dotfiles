@@ -18,6 +18,11 @@ call plug#begin()	" initialize vim-plug
 
     Plug 'neoclide/coc.nvim', Cond(!exists('g:vscode'), {'branch': 'release'})
     let g:coc_global_extensions = ['coc-css', 'coc-eslint', 'coc-html', 'coc-json', 'coc-markdownlint', 'coc-prettier', 'coc-tsserver']
+
+    " Required for telescope?
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'nvim-telescope/telescope.nvim'
+    Plug 'nvim-telescope/telescope-fzf-native.nvim', {'do': 'make'}
     
 		"Plug 'scrooloose/neerdtree', Cond(!exists('g:vscode'))
 		"Plug 'ryanoasis/vim-devicons', Cond(!exists('g:vscode'))
@@ -183,7 +188,7 @@ else
   let g:gruvbox_material_better_performance = 1
   colorscheme gruvbox-material
 
-  " For Coc
+  "Coc
 
   " Some servers have issues with backup files, see #649.
   set nobackup
@@ -331,11 +336,17 @@ else
   " Resume latest coc list.
   nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
+  " Telescope
+  " Find files using Telescope command-line sugar.
+  nnoremap <leader>ff <cmd>Telescope find_files<cr>
+  nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+  nnoremap <leader>fb <cmd>Telescope buffers<cr>
+  nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 	" Text Editing {{{2
 
-		" Using <C-u> or <C-w> in insert mode undoes the last change, potentially deleting text that can't be recovered with <C-r>. <C-g>u creates a new change before undoing.
-		inoremap <C-u> <C-g>u<C-u>
-		inoremap <C-w> <C-g>u<C-w>
+  " Using <C-u> or <C-w> in insert mode undoes the last change, potentially deleting text that can't be recovered with <C-r>. <C-g>u creates a new change before undoing.
+  inoremap <C-u> <C-g>u<C-u>
+  inoremap <C-w> <C-g>u<C-w>
 
 " Keybindings {{{1
 
