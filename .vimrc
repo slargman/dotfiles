@@ -24,9 +24,9 @@ call plug#begin()	" initialize vim-plug
     Plug 'nvim-telescope/telescope.nvim'
     Plug 'nvim-telescope/telescope-fzf-native.nvim', {'do': 'make'}
     
-		"Plug 'scrooloose/neerdtree', Cond(!exists('g:vscode'))
-		"Plug 'ryanoasis/vim-devicons', Cond(!exists('g:vscode'))
-
+    " requires
+    Plug 'kyazdani42/nvim-web-devicons' " for file icons
+    Plug 'kyazdani42/nvim-tree.lua'
 call plug#end()
 
 if exists('g:vscode')
@@ -77,6 +77,8 @@ if exists('g:vscode')
   set tabstop=2	" How many spaces a tab should consist of
   set shiftwidth=2	" How many spaces each step of auto indent should consist of
   set expandtab
+
+  set undofile
 
   " Using <C-u> or <C-w> in insert mode undoes the last change, potentially deleting text that can't be recovered with <C-r>. <C-g>u creates a new change before undoing.
   imap <C-u> <C-g>u<C-u>
@@ -205,6 +207,9 @@ else
   set shortmess+=c
 
   set signcolumn=number
+
+  " Cursor kept disappearing when opening diagnostics list
+  let g:coc_disable_transparent_cursor = 1
 
   " Use tab for trigger completion with characters ahead and navigate.
   " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
@@ -339,9 +344,15 @@ else
   " Telescope
   " Find files using Telescope command-line sugar.
   nnoremap <leader>ff <cmd>Telescope find_files<cr>
+  nnoremap <leader>fp <cmd>Telescope git_files<cr>
   nnoremap <leader>fg <cmd>Telescope live_grep<cr>
   nnoremap <leader>fb <cmd>Telescope buffers<cr>
   nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+  nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
+
+  nnoremap <C-n> :NvimTreeToggle<CR>
+  nnoremap <leader>r :NvimTreeRefresh<CR>
+  nnoremap <leader>n :NvimTreeFindFile<CR>
 	" Text Editing {{{2
 
   " Using <C-u> or <C-w> in insert mode undoes the last change, potentially deleting text that can't be recovered with <C-r>. <C-g>u creates a new change before undoing.
@@ -394,6 +405,38 @@ else
 	nnoremap : q:i
 	nnoremap q: :
 	set cmdwinheight=3
+
+  " Terminal Function
+  let g:term_buf = 0
+  let g:term_win = 0
+  function! TermToggle(height)
+      if win_gotoid(g:term_win)
+          hide
+      else
+          botright new
+          exec "resize " . a:height
+          try
+              exec "buffer " . g:term_buf
+          catch
+              call termopen($SHELL, {"detach": 0})
+              let g:term_buf = bufnr("")
+              set nonumber
+              set norelativenumber
+              set signcolumn=no
+          endtry
+          startinsert!
+          let g:term_win = win_getid()
+      endif
+  endfunction
+
+  " Toggle terminal on/off (neovim)
+  nnoremap <leader>t :call TermToggle(12)<CR>
+  nnoremap <leader>T :call TermToggle(36)<CR>
+  inoremap <leader>t <Esc>:call TermToggle(12)<CR>
+  tnoremap <leader>t <C-\><C-n>:call TermToggle(12)<CR>
+
+  " Terminal go back to normal mode
+  tnoremap :q! <C-\><C-n>:q!<CR>
 
 	" Plugin Keybindings {{{2
 
