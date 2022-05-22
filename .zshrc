@@ -92,6 +92,8 @@ z4h bindkey z4h-cd-down    Shift+Down   # cd into a child directory
 # My key bindings.
 bindkey -v
 bindkey jk vi-cmd-mode
+# bindkey '^I'   complete-word       # tab          | complete
+bindkey '^[[Z' autosuggest-accept  # shift + tab  | autosuggest
 
 # Autoload functions.
 autoload -Uz zmv
