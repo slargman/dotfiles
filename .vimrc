@@ -19,14 +19,16 @@ call plug#begin()	" initialize vim-plug
     Plug 'neoclide/coc.nvim', Cond(!exists('g:vscode'), {'branch': 'release'})
     let g:coc_global_extensions = ['coc-css', 'coc-eslint', 'coc-html', 'coc-json', 'coc-markdownlint', 'coc-prettier', 'coc-tsserver']
 
-    " Required for telescope?
+    " Required for telescope
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
     Plug 'nvim-telescope/telescope-fzf-native.nvim', {'do': 'make'}
     
-    " requires
     Plug 'kyazdani42/nvim-web-devicons' " for file icons
     Plug 'kyazdani42/nvim-tree.lua'
+
+    Plug 'akinsho/toggleterm.nvim', tag = 'v1.*'
+
 call plug#end()
 
 if exists('g:vscode')
@@ -78,7 +80,8 @@ if exists('g:vscode')
   set shiftwidth=2	" How many spaces each step of auto indent should consist of
   set expandtab
 
-  set undofile
+  set undofile " Required for persistent undo
+  set clipboard = unnamed " Copy and paste to system clipboard
 
   " Using <C-u> or <C-w> in insert mode undoes the last change, potentially deleting text that can't be recovered with <C-r>. <C-g>u creates a new change before undoing.
   imap <C-u> <C-g>u<C-u>
