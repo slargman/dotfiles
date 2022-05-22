@@ -9,7 +9,7 @@ call plug#begin()	" initialize vim-plug
 
 		Plug 'bling/vim-airline', Cond(!exists('g:vscode'))
 		Plug 'vim-airline/vim-airline-themes', Cond(!exists('g:vscode'))
-    Plug 'dracula/vim', { 'as': 'dracula' }
+    Plug 'sainnhe/gruvbox-material'
     Plug 'junegunn/rainbow_parentheses.vim', Cond(!exists('g:vscode'))
 		Plug 'tpope/vim-fugitive', Cond(!exists('g:vscode'))
 		Plug 'scrooloose/nerdcommenter', Cond(!exists('g:vscode'))
@@ -38,8 +38,6 @@ if exists('g:vscode')
 	set whichwrap+=h,l	" Allow h and l to move onto the previous/next line when on first/last character of line
 
 	set scrolloff=999	" Keep current line centered
-
-	syntax enable	" Enable syntax highlighting
 
 	"" Increase spacing between lines for legibility
 	set linespace=1
@@ -119,7 +117,7 @@ if exists('g:vscode')
 else
 " Settings {{{1
 
-	  set autochdir	" automatically change working directory to current file's location
+	set autochdir	" automatically change working directory to current file's location
 
   " Show as much as possible of the last line
   set display+=lastline
@@ -131,8 +129,6 @@ else
 	set whichwrap+=h,l	" Allow h and l to move onto the previous/next line when on first/last character of line
 
 	set scrolloff=999	" Keep current line centered
-
-	syntax enable	" Enable syntax highlighting
 
 	"" Increase spacing between lines for legibility
 	set linespace=1
@@ -167,6 +163,25 @@ else
   set tabstop=2	" How many spaces a tab should consist of
   set shiftwidth=2	" How many spaces each step of auto indent should consist of
   set expandtab
+
+  set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
+    \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
+    \,sm:block-blinkwait175-blinkoff150-blinkon175
+
+  " Important!!
+  if has('termguicolors')
+    set termguicolors
+  endif
+  " For dark version.
+  set background=dark
+
+  " Set contrast
+  " This configuration option should be placed before `colorscheme gruvbox-material`.
+  " Available values: 'hard', 'medium'(default), 'soft'
+  let g:gruvbox_material_background = 'soft'
+  " For better performance
+  let g:gruvbox_material_better_performance = 1
+  colorscheme gruvbox-material
 
   " For Coc
 
@@ -396,7 +411,7 @@ else
 		let g:airline#extensions#whitespace#enabled = 0
 
 		" set theme
-		let g:airline_theme='dracula'
+		let g:airline_theme='gruvbox_material'
 
 		" Mappings to switch to buffers
 		nmap <leader>1 <Plug>AirlineSelectTab1
