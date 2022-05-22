@@ -53,7 +53,7 @@ zstyle ':z4h:ssh:*' send-extra-files '~/.nanorc' '~/.env.zsh'
 # up-to-date. Cloned files can be used after `z4h init`. This is just an
 # example. If you don't plan to use Oh My Zsh, delete this line.
 z4h install ohmyzsh/ohmyzsh || return
-z4h install jeffreytse/zsh-vi-mode || return
+# z4h install jeffreytse/zsh-vi-mode || return
 
 # Install or update core components (fzf, zsh-autosuggestions, etc.) and
 # initialize Zsh. After this point console I/O is unavailable until Zsh
@@ -90,7 +90,8 @@ z4h bindkey z4h-cd-up      Shift+Up     # cd into the parent directory
 z4h bindkey z4h-cd-down    Shift+Down   # cd into a child directory
 
 # My key bindings.
-#bindkey -v
+bindkey -v
+bindkey jk vi-cmd-mode
 
 # Autoload functions.
 autoload -Uz zmv
