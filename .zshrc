@@ -81,7 +81,7 @@ z4h source ohmyzsh/ohmyzsh/lib/diagnostics.zsh  # source an individual file
 # z4h load   jeffreytse/zsh-vi-mode  # load a plugin
 
 # Define key bindings.
-z4h bindkey undo Ctrl+/   Shift+Tab  # undo the last command line change
+#z4h bindkey undo Ctrl+/   Shift+Tab  # undo the last command line change
 z4h bindkey redo Option+/            # redo the last undone command line change
 
 z4h bindkey z4h-cd-back    Shift+Left   # cd into the previous directory
@@ -94,6 +94,7 @@ bindkey -v
 bindkey jk vi-cmd-mode
 # bindkey '^I'   complete-word       # tab          | complete
 bindkey '^[[Z' autosuggest-accept  # shift + tab  | autosuggest
+bindkey '^ ' autosuggest-accept  # shift + tab  | autosuggest
 
 # Autoload functions.
 autoload -Uz zmv
