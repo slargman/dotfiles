@@ -96,7 +96,7 @@ if exists('g:vscode')
   set expandtab
 
   set undofile " Required for persistent undo
-  set clipboard+=unnamedplus " Copy and paste to system clipboard
+  set clipboard=unnamedplus " Copy and paste to system clipboard
 
   " Using <C-u> or <C-w> in insert mode undoes the last change, potentially deleting text that can't be recovered with <C-r>. <C-g>u creates a new change before undoing.
   imap <C-u> <C-g>u<C-u>
