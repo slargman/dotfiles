@@ -17,7 +17,7 @@ call plug#begin()	" initialize vim-plug
 		Plug 'mbbill/undotree', Cond(!exists('g:vscode'))
 
     Plug 'neoclide/coc.nvim', Cond(!exists('g:vscode'), {'branch': 'release'})
-    let g:coc_global_extensions = ['coc-css', 'coc-eslint', 'coc-html', 'coc-json', 'coc-markdownlint', 'coc-prettier', 'coc-tsserver']
+    let g:coc_global_extensions = ['coc-css', 'coc-eslint', 'coc-html', 'coc-json', 'coc-markdownlint', 'coc-prettier', 'coc-tsserver', 'coc-styled-components']
 
     " Required for telescope
     Plug 'nvim-lua/plenary.nvim'
@@ -27,7 +27,22 @@ call plug#begin()	" initialize vim-plug
     Plug 'kyazdani42/nvim-web-devicons' " for file icons
     Plug 'kyazdani42/nvim-tree.lua'
 
-    Plug 'akinsho/toggleterm.nvim', tag = 'v1.*'
+    Plug 'pangloss/vim-javascript'
+    " Or
+    " Plug 'yuezk/vim-js'
+    Plug 'maxmellon/vim-jsx-pretty'
+    " Or
+    " Plug 'neoclide/vim-jsx-improve' 
+    Plug 'styled-components/vim-styled-components'
+    
+    "Plug 'akinsho/toggleterm.nvim', tag = 'v1.*'
+
+    Plug 'ggandor/leap.nvim'
+
+    " Testing
+    "Plug 'vim-test/vim-test'
+    "Plug 'rcarriga/vim-ultest'
+    "Plug 'David-Kunz/jester'
 
 call plug#end()
 
@@ -81,7 +96,7 @@ if exists('g:vscode')
   set expandtab
 
   set undofile " Required for persistent undo
-  set clipboard = unnamed " Copy and paste to system clipboard
+  set clipboard+=unnamedplus " Copy and paste to system clipboard
 
   " Using <C-u> or <C-w> in insert mode undoes the last change, potentially deleting text that can't be recovered with <C-r>. <C-g>u creates a new change before undoing.
   imap <C-u> <C-g>u<C-u>
@@ -127,7 +142,7 @@ if exists('g:vscode')
 else
 " Settings {{{1
 
-	set autochdir	" automatically change working directory to current file's location
+	"set autochdir	" automatically change working directory to current file's location
 
   " Show as much as possible of the last line
   set display+=lastline
@@ -356,6 +371,7 @@ else
   nnoremap <C-n> :NvimTreeToggle<CR>
   nnoremap <leader>r :NvimTreeRefresh<CR>
   nnoremap <leader>n :NvimTreeFindFile<CR>
+
 	" Text Editing {{{2
 
   " Using <C-u> or <C-w> in insert mode undoes the last change, potentially deleting text that can't be recovered with <C-r>. <C-g>u creates a new change before undoing.
