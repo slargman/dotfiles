@@ -44,6 +44,11 @@ call plug#begin()	" initialize vim-plug
     "Plug 'rcarriga/vim-ultest'
     "Plug 'David-Kunz/jester'
 
+    "
+    Plug 'kassio/neoterm'
+    Plug 'michaelb/sniprun', {'do': 'bash install.sh'}
+    Plug 'ThePrimeagen/harpoon'
+
 call plug#end()
 
 if exists('g:vscode')
@@ -109,27 +114,27 @@ if exists('g:vscode')
 
 	" Move  by visual line
 	nmap j gj
-	nmap k gk
-	nmap 0 g0
-	nmap $ g$
-	nmap ^ g^
+nmap k gk
+nmap 0 g0
+nmap $ g$
+nmap ^ g^
 
-	vmap j gj
-	vmap k gk
-	vmap 0 g0
-	vmap $ g$
-	vmap ^ g^
+vmap j gj
+vmap k gk
+vmap 0 g0
+vmap $ g$
+vmap ^ g^
 
-	" Easier window navigation
-	"nnoremap <C-h> <C-w>h
-	"nnoremap <C-j> <C-w>j
-	"nnoremap <C-k> <C-w>k
-	"nnoremap <C-l> <C-w>l
+" Easier window navigation
+"nnoremap <C-h> <C-w>h
+"nnoremap <C-j> <C-w>j
+"nnoremap <C-k> <C-w>k
+"nnoremap <C-l> <C-w>l
 
-	" Make Y yank to end of line instead of yanking the whole line
-	map Y y$
+" Make Y yank to end of line instead of yanking the whole line
+map Y y$
 
-	nmap <Leader>w <Cmd>call VSCodeNotify('workbench.action.files.save')<CR>
+nmap <Leader>w <Cmd>call VSCodeNotify('workbench.action.files.save')<CR>
  
 	" Clear search highlighting easily
 	nmap <Leader>h :nohlsearch<CR>
@@ -351,7 +356,7 @@ else
   " Find symbol of current document.
   nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
   " Search workspace symbols.
-  nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+  "nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
   " Do default action for next item.
   nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
   " Do default action for previous item.
@@ -371,6 +376,20 @@ else
   nnoremap <C-n> :NvimTreeToggle<CR>
   nnoremap <leader>r :NvimTreeRefresh<CR>
   nnoremap <leader>n :NvimTreeFindFile<CR>
+
+  " Harpoon
+  nnoremap <silent><leader>m :lua require("harpoon.mark").add_file()<CR>
+  nnoremap <silent><leader>d :lua require("harpoon.ui").toggle_quick_menu()<CR>
+  " nnoremap <silent><leader>tc :lua require("harpoon.cmd-ui").toggle_quick_menu()<CR>
+
+  nnoremap <silent><leader>1 :lua require("harpoon.ui").nav_file(1)<CR>
+  nnoremap <silent><leader>2 :lua require("harpoon.ui").nav_file(2)<CR>
+  nnoremap <silent><leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
+  nnoremap <silent><leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
+
+  " neoterm
+  let g:neoterm_default_mod = "botright"
+  let g:neoterm_autoscroll = 1
 
 	" Text Editing {{{2
 
@@ -464,6 +483,16 @@ else
 			" Toggle Undotree
 			nnoremap <Leader>u :UndotreeToggle<CR>
 
+    " neoterm
+    " send file
+    nnoremap <leader>sf :TREPLSendFile<CR>
+
+    " send selection
+    vnoremap <leader>ss :TREPLSendSelection<CR>
+
+    " send line
+    nnoremap <leader>sl :TREPLSendLine<CR>
+
 " Plugin settings {{{1
 
 	" airline {{{2
@@ -477,9 +506,9 @@ else
 		let g:airline_left_sep=''
 		let g:airline_right_sep=''
 
-		let g:airline#extensions#tabline#enabled=1	" Display buffer list across top of window
-		let g:airline#extensions#tabline#fnamemod = ':t'	" Only show filename (no path) in tabline
-		let g:airline#extensions#tabline#buffer_idx_mode=1	" Numbers displayed in tabline to allow switching to a buffer directly
+		"let g:airline#extensions#tabline#enabled=1	" Display buffer list across top of window
+		"let g:airline#extensions#tabline#fnamemod = ':t'	" Only show filename (no path) in tabline
+		"let g:airline#extensions#tabline#buffer_idx_mode=1	" Numbers displayed in tabline to allow switching to a buffer directly
 		" Don't check for whitespace errors
 		let g:airline#extensions#whitespace#enabled = 0
 
@@ -487,15 +516,15 @@ else
 		let g:airline_theme='gruvbox_material'
 
 		" Mappings to switch to buffers
-		nmap <leader>1 <Plug>AirlineSelectTab1
-		nmap <leader>2 <Plug>AirlineSelectTab2
-		nmap <leader>3 <Plug>AirlineSelectTab3
-		nmap <leader>4 <Plug>AirlineSelectTab4
-		nmap <leader>5 <Plug>AirlineSelectTab5
-		nmap <leader>6 <Plug>AirlineSelectTab6
-		nmap <leader>7 <Plug>AirlineSelectTab7
-		nmap <leader>8 <Plug>AirlineSelectTab8
-		nmap <leader>9 <Plug>AirlineSelectTab9
+		"nmap <leader>1 <Plug>AirlineSelectTab1
+		"nmap <leader>2 <Plug>AirlineSelectTab2
+		"nmap <leader>3 <Plug>AirlineSelectTab3
+		"nmap <leader>4 <Plug>AirlineSelectTab4
+		"nmap <leader>5 <Plug>AirlineSelectTab5
+		"nmap <leader>6 <Plug>AirlineSelectTab6
+		"nmap <leader>7 <Plug>AirlineSelectTab7
+		"nmap <leader>8 <Plug>AirlineSelectTab8
+		"nmap <leader>9 <Plug>AirlineSelectTab9
 
 	" Rainbow Parentheses {{{2
 
