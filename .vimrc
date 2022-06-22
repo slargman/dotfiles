@@ -1,5 +1,4 @@
 " Plugins {{{1
-
 function! Cond(cond, ...)
   let opts = get(a:000, 0, {})
   return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
@@ -35,8 +34,6 @@ call plug#begin()	" initialize vim-plug
     " Plug 'neoclide/vim-jsx-improve' 
     Plug 'styled-components/vim-styled-components'
     
-    "Plug 'akinsho/toggleterm.nvim', tag = 'v1.*'
-
     Plug 'ggandor/leap.nvim'
 
     " Testing
@@ -44,33 +41,61 @@ call plug#begin()	" initialize vim-plug
     "Plug 'rcarriga/vim-ultest'
     "Plug 'David-Kunz/jester'
 
-    "
+    " Terminal/code runners
     Plug 'kassio/neoterm'
-    Plug 'michaelb/sniprun', {'do': 'bash install.sh'}
+    "Plug 'michaelb/sniprun', {'do': 'bash install.sh'}
+    "Plug 'akinsho/toggleterm.nvim', tag = 'v1.*'
+    
     Plug 'ThePrimeagen/harpoon'
+    Plug 'lewis6991/gitsigns.nvim'
+    Plug 'folke/which-key.nvim'
+
+    Plug 'mfussenegger/nvim-dap'
+
+    "Testing
+    "Plug 'nvim-neotest/neotest'
+    "Plug 'vim-test/vim-test'
+
+    " Documentation
+    " howdoi requires python
+    "Plug Zane-/howdoi.nvim
+    "Plug laurentgoudet/vim-howdoi
+    "Plug 'vmchale/howdoi-vim' , {'do' : './install.sh' }
+    " Cheatsheets
+    "Plug 'dbeniamine/cheat.sh-vim'
+    "Plug 'Djancyp/cheat-sheet'
+    Plug 'RishabhRD/popfix'
+    Plug 'RishabhRD/nvim-cheat.sh'
+
+    " Smooth scrolling
+    "Plug 'declancm/cinnamon.nvim'
+    "Plug 'psliwka/vim-smoothie'
+    Plug 'karb94/neoscroll.nvim'
+
 
 call plug#end()
 
-if exists('g:vscode')
+" Settings {{{1
 
-  set autochdir	" automatically change working directory to current file's location
+  "set autochdir	" automatically change working directory to current file's location
 
   " Show as much as possible of the last line
   set display+=lastline
 
 	" Control where new splits open
-	set splitright
+	"set splitright
 	set splitbelow
 
 	set whichwrap+=h,l	" Allow h and l to move onto the previous/next line when on first/last character of line
 
 	set scrolloff=999	" Keep current line centered
 
-	"" Increase spacing between lines for legibility
+	" Increase spacing between lines for legibility
 	set linespace=1
 	
-	set notimeout
-	set ttimeout
+  set timeoutlen=1000
+	"set notimeout
+	"set ttimeout
 
   set laststatus=2	" Show the status line in the last window (e.g. when starting Vim)
 
@@ -80,7 +105,7 @@ if exists('g:vscode')
   "set relativenumber	" Show line numbers relative to current line
   set numberwidth=3	" Minimum number of lines to use for line number
 
-  "" Remove | in vert split dividers
+  " Remove | in vert split dividers
   set fillchars+=vert:\ 
 
 	set ignorecase	" Ignore case when searching
@@ -93,7 +118,7 @@ if exists('g:vscode')
 
   set wrap " Turn on soft wrap
   set linebreak " Only soft wrap between words
-  ""let &showbreak='↳ '	" Indicate soft wrapped line with a symbol
+  "let &showbreak='↳ '	" Indicate soft wrapped line with a symbol
   set breakindent	" Take indentation into account when soft wrapping
 
   set tabstop=2	" How many spaces a tab should consist of
@@ -101,103 +126,97 @@ if exists('g:vscode')
   set expandtab
 
   set undofile " Required for persistent undo
-  set clipboard=unnamedplus " Copy and paste to system clipboard
+  "set clipboard=unnamedplus " Copy and paste to system clipboard
+  
+  " Autosave
+  "autocmd TextChanged,FocusLost,BufEnter * silent update
+  "
+  "augroup AutoSave
+  "  autocmd CursorHoldI,FocusLost,TextChanged <buffer>
+  "    \ if &readonly == 0 && filereadable(bufname('%')) | silent! update | endif
+  "augroup END
+  "
+  "autocmd TextChanged,TextChangedI <buffer> silent update
+  " Might be necessary for Coc?
+  autocmd InsertLeave,TextChanged * if &readonly == 0 && filereadable(bufname('%'))
+                                 \ | silent update | endif
+  " prevent broken syntax in js
+  " might also need to change redraw time?
+  autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
+  autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
+
 
   " Using <C-u> or <C-w> in insert mode undoes the last change, potentially deleting text that can't be recovered with <C-r>. <C-g>u creates a new change before undoing.
   imap <C-u> <C-g>u<C-u>
   imap <C-w> <C-g>u<C-w>
 
-" Keybindings {{{1
+" General keybindings {{{1
 
 	map <Space> <Leader>
   "let mapleader="\<Space>"
 
 	" Move  by visual line
-	nmap j gj
-nmap k gk
-nmap 0 g0
-nmap $ g$
-nmap ^ g^
+	nnoremap j gj
+	nnoremap k gk
+	nnoremap 0 g0
+	nnoremap $ g$
+	nnoremap ^ g^
 
-vmap j gj
-vmap k gk
-vmap 0 g0
-vmap $ g$
-vmap ^ g^
+	vnoremap j gj
+	vnoremap k gk
+	vnoremap 0 g0
+	vnoremap $ g$
+	vnoremap ^ g^
 
-" Easier window navigation
-"nnoremap <C-h> <C-w>h
-"nnoremap <C-j> <C-w>j
-"nnoremap <C-k> <C-w>k
-"nnoremap <C-l> <C-w>l
+  " Make Y yank to end of line instead of yanking the whole line
+  nnoremap Y y$
 
-" Make Y yank to end of line instead of yanking the whole line
-map Y y$
+  " Using <C-u> or <C-w> in insert mode undoes the last change, potentially deleting text that can't be recovered with <C-r>. <C-g>u creates a new change before undoing.
+  inoremap <C-u> <C-g>u<C-u>
+  inoremap <C-w> <C-g>u<C-w>
 
-nmap <Leader>w <Cmd>call VSCodeNotify('workbench.action.files.save')<CR>
- 
+	" Make vim-style editing available in cmd-line
+	nnoremap : q:i
+	nnoremap q: :
+	set cmdwinheight=3
+
+	" Map jk as esc in insert mode
+	inoremap jk <esc>
+	tnoremap jk <C-\><C-n>
+
+  " Terminal go back to normal mode
+  tnoremap :q! <C-\><C-n>:q!<CR>
+
 	" Clear search highlighting easily
 	nmap <Leader>h :nohlsearch<CR>
 
-	" Make vim-style editing available in cmd-line
-	nmap : q:i
-	nmap q: :
-	set cmdwinheight=3
+if !exists('g:vscode')
 
-else
-" Settings {{{1
+" Non VS Code Keybindings {{{1
 
-	"set autochdir	" automatically change working directory to current file's location
+" Easier window navigation
+  nnoremap <C-h> <C-w>h
+  nnoremap <C-j> <C-w>j
+  nnoremap <C-k> <C-w>k
+  nnoremap <C-l> <C-w>l
 
-  " Show as much as possible of the last line
-  set display+=lastline
+  tnoremap <C-h> <C-\><C-n><C-w>h
+  tnoremap <C-j> <C-\><C-n><C-w>j
+  tnoremap <C-k> <C-\><C-n><C-w>k
+  tnoremap <C-l> <C-\><C-n><C-w>l
 
-	" Control where new splits open
-	set splitright
-	set splitbelow
+	" Fast saving
+	"nnoremap <Leader>w :w!<cr>
 
-	set whichwrap+=h,l	" Allow h and l to move onto the previous/next line when on first/last character of line
+	" Opens my .vimrc for editing
+	nnoremap <Leader>ve :e ~/.vimrc<CR>
 
-	set scrolloff=999	" Keep current line centered
+	" MYVIMRC reloads the saved $MYVIMRC
+	nnoremap <Leader>vs :source $MYVIMRC<CR>
+  
+" Plugins {{{1
 
-	"" Increase spacing between lines for legibility
-	set linespace=1
-	
-	set notimeout
-	set ttimeout
-
-  set laststatus=2	" Show the status line in the last window (e.g. when starting Vim)
-
-  set showcmd	" Show entered commands in the last line of the screen
-
-  set number	" Show current line number
-  "set relativenumber	" Show line numbers relative to current line
-  set numberwidth=3	" Minimum number of lines to use for line number
-
-  "" Remove | in vert split dividers
-  set fillchars+=vert:\ 
-
-	set ignorecase	" Ignore case when searching
-	set smartcase	" Over ride ignorecase setting when search pattern has upper case characters
-
-	" Show matching brackets when text indicator is over them
-	set showmatch
-	" How many tenths of a second to blink when matching brackets
-	set mat=2
-
-  set wrap " Turn on soft wrap
-  set linebreak " Only soft wrap between words
-  ""let &showbreak='↳ '	" Indicate soft wrapped line with a symbol
-  set breakindent	" Take indentation into account when soft wrapping
-
-  set tabstop=2	" How many spaces a tab should consist of
-  set shiftwidth=2	" How many spaces each step of auto indent should consist of
-  set expandtab
-
-  set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
-    \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
-    \,sm:block-blinkwait175-blinkoff150-blinkon175
-
+  " Colorscheme {{{2
   " Important!!
   if has('termguicolors')
     set termguicolors
@@ -213,7 +232,7 @@ else
   let g:gruvbox_material_better_performance = 1
   colorscheme gruvbox-material
 
-  "Coc
+  " Coc {{{2
 
   " Some servers have issues with backup files, see #649.
   set nobackup
@@ -229,7 +248,7 @@ else
   " Don't pass messages to |ins-completion-menu|.
   set shortmess+=c
 
-  set signcolumn=number
+  "set signcolumn=number
 
   " Cursor kept disappearing when opening diagnostics list
   let g:coc_disable_transparent_cursor = 1
@@ -348,23 +367,23 @@ else
 
   " Mappings for CoCList
   " Show all diagnostics.
-  nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+  "nnoremap <silent><nowait> <leader>a  :<C-u>CocList diagnostics<cr>
   " Manage extensions.
-  nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+  "nnoremap <silent><nowait> <leader>e  :<C-u>CocList extensions<cr>
   " Show commands.
-  nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+  "nnoremap <silent><nowait> <leader>c  :<C-u>CocList commands<cr>
   " Find symbol of current document.
-  nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+  "nnoremap <silent><nowait> <leader>o  :<C-u>CocList outline<cr>
   " Search workspace symbols.
   "nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
   " Do default action for next item.
-  nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+  "nnoremap <silent><nowait> <leader>j  :<C-u>CocNext<CR>
   " Do default action for previous item.
-  nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+  "nnoremap <silent><nowait> <leader>k  :<C-u>CocPrev<CR>
   " Resume latest coc list.
-  nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+  "nnoremap <silent><nowait> <leader>p  :<C-u>CocListResume<CR>
 
-  " Telescope
+  " Telescope {{{2
   " Find files using Telescope command-line sugar.
   nnoremap <leader>ff <cmd>Telescope find_files<cr>
   nnoremap <leader>fp <cmd>Telescope git_files<cr>
@@ -374,10 +393,10 @@ else
   nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
 
   nnoremap <C-n> :NvimTreeToggle<CR>
-  nnoremap <leader>r :NvimTreeRefresh<CR>
-  nnoremap <leader>n :NvimTreeFindFile<CR>
+  "nnoremap <leader>r :NvimTreeRefresh<CR>
+  "nnoremap <leader>n :NvimTreeFindFile<CR>
 
-  " Harpoon
+  " Harpoon {{{2
   nnoremap <silent><leader>m :lua require("harpoon.mark").add_file()<CR>
   nnoremap <silent><leader>d :lua require("harpoon.ui").toggle_quick_menu()<CR>
   " nnoremap <silent><leader>tc :lua require("harpoon.cmd-ui").toggle_quick_menu()<CR>
@@ -387,113 +406,43 @@ else
   nnoremap <silent><leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
   nnoremap <silent><leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
 
-  " neoterm
-  let g:neoterm_default_mod = "botright"
-  let g:neoterm_autoscroll = 1
+  "Neoterm {{{2
+  nnoremap <leader>t :Ttoggle resize=24<CR>
+  nnoremap <leader>T :Ttoggle resize=36<CR>
+  "tnoremap <leader>t <C-\><C-n>:Ttoggle<CR>
+  
+  let g:neoterm_default_mod="botright"
+  let g:neoterm_autoscroll=1
+  let g:neoterm_autoinsert=1
 
-	" Text Editing {{{2
+  " send file
+  nnoremap <leader>sf :TREPLSendFile<CR>
+  " send selection
+  vnoremap <leader>ss :TREPLSendSelection<CR>
+  " send line
+  nnoremap <leader>ss :TREPLSendLine<CR>
+  "nmap <leader>ss <Plug>SnipRun
+  "nmap <leader>sr <Plug>SnipReset
+  "nmap <leader>sc <Plug>SnipClose
+  "nmap <leader>sn <Plug>SnipReplMemoryClean
+  "nmap <leader>f <Plug>SnipRunOperator
+  "For interpreted languages with simple output, :%SnipRun (or a shortcut, wrapping it with let b:caret=winsaveview() and call winrestview(b:caret) in order to keep the cursor at the current position) may be a more convenient way to run your entire file. When running the whole file, SnipRun supports taking arguments on the command line: :%SnipRun 5 "yay" frictionlessly for interpreted languages, and compiled languages with entry point detection implemented (most of them).
+  "nmap <leader>sf :%SnipRun<CR>
+  "vmap <leader>ss <Plug>SnipRun
+  
+  " Undotree {{{2
 
-  " Using <C-u> or <C-w> in insert mode undoes the last change, potentially deleting text that can't be recovered with <C-r>. <C-g>u creates a new change before undoing.
-  inoremap <C-u> <C-g>u<C-u>
-  inoremap <C-w> <C-g>u<C-w>
+  " Toggle Undotree
+  nnoremap <Leader>u :UndotreeToggle<CR>
 
-" Keybindings {{{1
+  " Tree to the left and diff window below
+  let g:undotree_WindowLayout = 2
 
-	map <Space> <Leader>
+  " Give undotree window focus when opening
+  let g:undotree_SetFocusWhenToggle = 1
 
-	" Move  by visual line
-	nnoremap j gj
-	nnoremap k gk
-	nnoremap 0 g0
-	nnoremap $ g$
-	nnoremap ^ g^
-
-	vnoremap j gj
-	vnoremap k gk
-	vnoremap 0 g0
-	vnoremap $ g$
-	vnoremap ^ g^
-
-	" Easier window navigation
-	nnoremap <C-h> <C-w>h
-	nnoremap <C-j> <C-w>j
-	nnoremap <C-k> <C-w>k
-	nnoremap <C-l> <C-w>l
-
-	" Make Y yank to end of line instead of yanking the whole line
-	map Y y$
-
-	" Map jk as esc in insert mode
-	inoremap jk <esc>
-	tnoremap jk <C-\><C-n>
-
-	" Opens my .vimrc for editing
-	nnoremap <Leader>v :e ~/.vimrc<CR>
-
-	" MYVIMRC reloads the saved $MYVIMRC
-	"nnoremap <Leader>s :source $MYVIMRC<CR>
-
-	" Fast saving
-	nnoremap <Leader>w :w!<cr>
-
-	" Clear search highlighting easily
-	nnoremap <Leader>h :nohlsearch<CR>
-
-	" Make vim-style editing available in cmd-line
-	nnoremap : q:i
-	nnoremap q: :
-	set cmdwinheight=3
-
-  " Terminal Function
-  let g:term_buf = 0
-  let g:term_win = 0
-  function! TermToggle(height)
-      if win_gotoid(g:term_win)
-          hide
-      else
-          botright new
-          exec "resize " . a:height
-          try
-              exec "buffer " . g:term_buf
-          catch
-              call termopen($SHELL, {"detach": 0})
-              let g:term_buf = bufnr("")
-              set nonumber
-              set norelativenumber
-              set signcolumn=no
-          endtry
-          startinsert!
-          let g:term_win = win_getid()
-      endif
-  endfunction
-
-  " Toggle terminal on/off (neovim)
-  nnoremap <leader>t :call TermToggle(12)<CR>
-  nnoremap <leader>T :call TermToggle(36)<CR>
-  inoremap <leader>t <Esc>:call TermToggle(12)<CR>
-  tnoremap <leader>t <C-\><C-n>:call TermToggle(12)<CR>
-
-  " Terminal go back to normal mode
-  tnoremap :q! <C-\><C-n>:q!<CR>
-
-	" Plugin Keybindings {{{2
-
-		" Undotree {{{3
-
-			" Toggle Undotree
-			nnoremap <Leader>u :UndotreeToggle<CR>
-
-    " neoterm
-    " send file
-    nnoremap <leader>sf :TREPLSendFile<CR>
-
-    " send selection
-    vnoremap <leader>ss :TREPLSendSelection<CR>
-
-    " send line
-    nnoremap <leader>sl :TREPLSendLine<CR>
-
-" Plugin settings {{{1
+  " Tree node shape
+  let g:undotree_TreeNodeShape = 'o'
 
 	" airline {{{2
 
@@ -537,16 +486,10 @@ else
 			autocmd FileType tex RainbowParentheses
 		augroup END
 
-	" Undotree {{{2
 
-		" Tree to the left and diff window below
-		let g:undotree_WindowLayout = 2
-
-		" Give undotree window focus when opening
-		let g:undotree_SetFocusWhenToggle = 1
-
-		" Tree node shape
-		let g:undotree_TreeNodeShape = 'o'
-
+endif
+if exists('g:vscode')
+  " VS Code configuration {{{1
+  nmap <Leader>w <Cmd>call VSCodeNotify('workbench.action.files.save')<CR>
 endif
 " vim: foldmethod=marker:tw=0:
